@@ -24,7 +24,7 @@ Indel discovery in human whole-genome sequencing data.
 
 ### Software version requirements :
 - GATK 4.0.10.1
-- Picard 2.16.0-SNAPSHOT
+- Picard 2.20.0-SNAPSHOT
 - Samtools 1.3.1
 - Python 2.7
 - Cromwell version support 
