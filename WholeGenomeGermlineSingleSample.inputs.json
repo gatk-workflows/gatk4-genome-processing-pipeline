@@ -1,6 +1,6 @@
 {
   "WholeGenomeGermlineSingleSample.sample_and_unmapped_bams": {
-    "sample_name": "NA12878 PLUMBING",
+    "sample_name": "NA12878_PLUMBING",
     "base_file_name": "NA12878_PLUMBING",
     "flowcell_unmapped_bams": [
       "gs://dsde-data-na12878-public/H06HDADXX130110.1.ATCACGAT.20k_reads.bam",
