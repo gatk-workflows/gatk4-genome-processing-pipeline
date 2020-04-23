@@ -1,13 +1,34 @@
 {
   "WholeGenomeGermlineSingleSample.sample_and_unmapped_bams": {
-    "sample_name": "NA12878_PLUMBING",
-    "base_file_name": "NA12878_PLUMBING",
+    "sample_name": "NA12878",
+    "base_file_name": "NA1278",
     "flowcell_unmapped_bams": [
-      "gs://dsde-data-na12878-public/H06HDADXX130110.1.ATCACGAT.20k_reads.bam",
-      "gs://dsde-data-na12878-public/H06HDADXX130110.2.ATCACGAT.20k_reads.bam",
-      "gs://dsde-data-na12878-public/H06JUADXX130110.1.ATCACGAT.20k_reads.bam"
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYFJ.4.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYFJ.5.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYFJ.6.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYFJ.7.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYFJ.8.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HJYN2.1.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.1.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.2.NA12878.downsampled.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.3.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.4.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.5.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.6.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.7.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35M.8.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35N.1.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK35N.2.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.1.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.2.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.3.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.4.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.5.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.6.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.7.NA12878.interval.filtered.query.sorted.unmapped.bam",
+    "gs://gatk-test-data/wgs_ubam/NA12878_24RG/small/HK3T5.8.NA12878.interval.filtered.query.sorted.unmapped.bam"
     ],
-    "final_gvcf_base_name": "NA12878_PLUMBING",
+    "final_gvcf_base_name": "NA12878",
     "unmapped_bam_suffix": ".bam"
   },
 
@@ -50,6 +71,5 @@
   "WholeGenomeGermlineSingleSample.papi_settings": {
     "preemptible_tries": 3,
     "agg_preemptible_tries": 3
-  },
-  "WholeGenomeGermlineSingleSample.UnmappedBamToAlignedBam.UnmappedBamToAlignedBam.CheckContamination.disable_sanity_check": true
+  }
 }

@@ -1,10 +1,7 @@
 version 1.0
 
-#import "./Utilities.wdl" as Utils
-#import "./Qc.wdl" as QC
-
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/Utilities.wdl" as Utils
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/Qc.wdl" as QC
+import "./Utilities.wdl" as Utils
+import "./Qc.wdl" as QC
 
 workflow BamToCram {
 

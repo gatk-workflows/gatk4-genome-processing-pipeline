@@ -28,24 +28,17 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-#import "./tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-#import "./tasks/AggregatedBamQC.wdl" as AggregatedQC
-#import "./tasks/Qc.wdl" as QC
-#import "./tasks/BamToCram.wdl" as ToCram
-#import "./tasks/VariantCalling.wdl" as ToGvcf
-#import "./structs/GermlineStructs.wdl"
-
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/AggregatedBamQC.wdl" as AggregatedQC
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/Qc.wdl" as QC
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/BamToCram.wdl" as ToCram
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/tasks/VariantCalling.wdl" as ToGvcf
-import "https://raw.githubusercontent.com/gatk-workflows/gatk4-genome-processing-pipeline/1.0.0/structs/GermlineStructs.wdl"
+import "./tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+import "./tasks/AggregatedBamQC.wdl" as AggregatedQC
+import "./tasks/Qc.wdl" as QC
+import "./tasks/BamToCram.wdl" as ToCram
+import "./tasks/VariantCalling.wdl" as ToGvcf
+import "./structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow WholeGenomeGermlineSingleSample {
 
-  String pipeline_version = "1.3"
+  String pipeline_version = "1.4"
 
   input {
     SampleAndUnmappedBams sample_and_unmapped_bams
