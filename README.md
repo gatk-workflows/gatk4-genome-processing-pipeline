@@ -32,8 +32,6 @@ Indel discovery in human whole-genome sequencing data.
   - Does not work on versions < v23 due to output syntax
 
 ### Important Notes :
-- The `disable_sainity_check` variable has been set to "true" to run the NA12878 plumbing sample. Normally this variable is 
-left to its default "false" setting when running with normal sized samples. 
 - Runtime parameters are optimized for Broad's Google Cloud Platform implementation.
 - For help running workflows on the Google Cloud Platform or locally please
 view the following tutorial [(How to) Execute Workflows from the gatk-workflows Git Organization](https://gatk.broadinstitute.org/hc/en-us/articles/360035530952).
