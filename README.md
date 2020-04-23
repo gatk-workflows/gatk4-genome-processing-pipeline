@@ -32,6 +32,7 @@ Indel discovery in human whole-genome sequencing data.
   - Does not work on versions < v23 due to output syntax
 
 ### Important Notes :
+- The provided JSON is a generic ready to use example template for the workflow. It is the user’s responsibility to correctly set the reference and resource variables for their own particular test case using the [GATK Tool and Tutorial Documentations](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591).
 - Runtime parameters are optimized for Broad's Google Cloud Platform implementation.
 - For help running workflows on the Google Cloud Platform or locally please
 view the following tutorial [(How to) Execute Workflows from the gatk-workflows Git Organization](https://gatk.broadinstitute.org/hc/en-us/articles/360035530952).
