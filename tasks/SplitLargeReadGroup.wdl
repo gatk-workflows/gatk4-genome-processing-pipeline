@@ -15,10 +15,15 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "./Alignment.wdl" as Alignment
-import "./BamProcessing.wdl" as Processing
-import "./Utilities.wdl" as Utils
-import "../structs/GermlineStructs.wdl" as Structs
+#import "./Alignment.wdl" as Alignment
+#import "./BamProcessing.wdl" as Processing
+#import "./Utilities.wdl" as Utils
+#import "../structs/GermlineStructs.wdl" as Structs
+
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Alignment.wdl" as Alignment
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/BamProcessing.wdl" as Processing
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Utilities.wdl" as Utils
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/structs/GermlineStructs.wdl" as Structs
 
 workflow SplitLargeReadGroup {
 
@@ -48,7 +53,7 @@ workflow SplitLargeReadGroup {
   }
 
   scatter(unmapped_bam in SamSplitter.split_bams) {
-    Float current_unmapped_bam_size = size(unmapped_bam, "GiB")
+    Float current_unmapped_bam_size = size(unmapped_bam, "GB")
     String current_name = basename(unmapped_bam, ".bam")
 
     call Alignment.SamToFastqAndBwaMemAndMba as SamToFastqAndBwaMemAndMba {
@@ -62,7 +67,7 @@ workflow SplitLargeReadGroup {
         preemptible_tries = preemptible_tries
     }
 
-    Float current_mapped_size = size(SamToFastqAndBwaMemAndMba.output_bam, "GiB")
+    Float current_mapped_size = size(SamToFastqAndBwaMemAndMba.output_bam, "GB")
   }
 
   call Utils.SumFloats as SumSplitAlignedSizes {

@@ -18,6 +18,7 @@ version 1.0
 task HaplotypeCaller_GATK35_GVCF {
   input {
     File input_bam
+    File input_bam_index
     File interval_list
     String gvcf_basename
     File ref_dict
@@ -34,8 +35,8 @@ task HaplotypeCaller_GATK35_GVCF {
     }
   }
 
-  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB") + size(ref_dict, "GiB")
-  Int disk_size = ceil(((size(input_bam, "GiB") + 30) / hc_scatter) + ref_size) + 20
+  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
+  Int disk_size = ceil(size(input_bam, "GB") + 30 + size(input_bam_index, "GB")+ ref_size) + 20
 
   # We use interval_padding 500 below to make sure that the HaplotypeCaller has context on both sides around
   # the interval because the assembly uses them.
@@ -66,10 +67,11 @@ task HaplotypeCaller_GATK35_GVCF {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "10 GiB"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "10 GB"
     cpu: "1"
-    disks: "local-disk " + disk_size + " HDD"
+    disk: disk_size + " GB"
   }
   output {
     File output_gvcf = "~{gvcf_basename}.vcf.gz"
@@ -80,6 +82,7 @@ task HaplotypeCaller_GATK35_GVCF {
 task HaplotypeCaller_GATK4_VCF {
   input {
     File input_bam
+    File input_bam_index
     File interval_list
     String vcf_basename
     File ref_dict
@@ -96,8 +99,8 @@ task HaplotypeCaller_GATK4_VCF {
   String output_suffix = if make_gvcf then ".g.vcf.gz" else ".vcf.gz"
   String output_file_name = vcf_basename + output_suffix
 
-  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB") + size(ref_dict, "GiB")
-  Int disk_size = ceil(((size(input_bam, "GiB") + 30) / hc_scatter) + ref_size) + 20
+  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
+  Int disk_size = ceil(size(input_bam, "GB") + 30 + size(input_bam_index, "GB")+ ref_size) + 20
 
   String bamout_arg = if make_bamout then "-bamout ~{vcf_basename}.bamout.bam" else ""
 
@@ -128,10 +131,11 @@ task HaplotypeCaller_GATK4_VCF {
 
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "6.5 GiB"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "6.5 GB"
     cpu: "2"
-    disks: "local-disk " + disk_size + " HDD"
+    disk: disk_size + " GB"
   }
 
   output {
@@ -150,7 +154,7 @@ task MergeVCFs {
     Int preemptible_tries
   }
 
-  Int disk_size = ceil(size(input_vcfs, "GiB") * 2.5) + 10
+  Int disk_size = ceil(size(input_vcfs, "GB") * 2.5) + 10
 
   # Using MergeVcfs instead of GatherVcfs so we can create indices
   # See https://github.com/broadinstitute/picard/issues/789 for relevant GatherVcfs ticket
@@ -162,9 +166,10 @@ task MergeVCFs {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "3 GiB"
-    disks: "local-disk ~{disk_size} HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3 GB"
+    disk: "~{disk_size} GB"
   }
   output {
     File output_vcf = "~{output_vcf_name}"
@@ -182,7 +187,7 @@ task HardFilterVcf {
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.0.10.1"
   }
 
-  Int disk_size = ceil(2 * size(input_vcf, "GiB")) + 20
+  Int disk_size = ceil(2 * size(input_vcf, "GB")) + 20
   String output_vcf_name = vcf_basename + ".filtered.vcf.gz"
 
   command {
@@ -200,9 +205,10 @@ task HardFilterVcf {
     }
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "3 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3 GB"
+    disk: disk_size + " GB"
   }
 }
 
@@ -221,7 +227,7 @@ task CNNScoreVariants {
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.0.0"
   }
 
-  Int disk_size = ceil(size(bamout, "GiB") + size(ref_fasta, "GiB") + (size(input_vcf, "GiB") * 2))
+  Int disk_size = ceil(size(bamout, "GB") + size(ref_fasta, "GB") + (size(input_vcf, "GB") * 2))
 
   String base_vcf = basename(input_vcf)
   Boolean is_compressed = basename(base_vcf, "gz") != base_vcf
@@ -249,10 +255,11 @@ task CNNScoreVariants {
 
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "15 GiB"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "15 GB"
     cpu: "2"
-    disks: "local-disk " + disk_size + " HDD"
+    disk: disk_size + " GB"
   }
 }
 
@@ -277,11 +284,11 @@ task FilterVariantTranches {
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.1.0.0"
   }
 
-  Int disk_size = ceil(size(hapmap_resource_vcf, "GiB") +
-                        size(omni_resource_vcf, "GiB") +
-                        size(one_thousand_genomes_resource_vcf, "GiB") +
-                        size(dbsnp_resource_vcf, "GiB") +
-                        (size(input_vcf, "GiB") * 2)
+  Int disk_size = ceil(size(hapmap_resource_vcf, "GB") +
+                        size(omni_resource_vcf, "GB") +
+                        size(one_thousand_genomes_resource_vcf, "GB") +
+                        size(dbsnp_resource_vcf, "GB") +
+                        (size(input_vcf, "GB") * 2)
                       ) + 20
 
   command {
@@ -305,10 +312,11 @@ task FilterVariantTranches {
   }
 
   runtime {
-    memory: "7 GiB"
+    memory: "7 GB"
     cpu: "2"
-    disks: "local-disk " + disk_size + " HDD"
-    preemptible: preemptible_tries
+    disk: disk_size + " GB"
+    preemptible: true
+    maxRetries: preemptible_tries
     docker: gatk_docker
   }
 }

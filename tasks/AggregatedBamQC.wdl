@@ -15,8 +15,11 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "./Qc.wdl" as QC
-import "../structs/GermlineStructs.wdl"
+#import "./Qc.wdl" as QC
+#import "../structs/GermlineStructs.wdl"
+
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Qc.wdl" as QC
+import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow AggregatedBamQC {

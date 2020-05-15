@@ -1,0 +1,6 @@
+{
+    "WorkflowUrl":"https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/WholeGenomeGermlineSingleSample.wdl",
+    "WorkflowInputsUrl":"https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/WholeGenomeGermlineSingleSample.inputs.json",
+    "WorkflowOptionsUrl":null,
+    "WorkflowDependenciesUrl":null
+}
