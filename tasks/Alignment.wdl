@@ -17,7 +17,7 @@ version 1.0
 
 #import "../structs/GermlineStructs.wdl"
 
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/structs/GermlineStructs.wdl"
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/structs/GermlineStructs.wdl"
 
 # Get version of BWA
 task GetBwaVersion {

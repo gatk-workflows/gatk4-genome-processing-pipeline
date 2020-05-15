@@ -5,10 +5,10 @@ version 1.0
 #import "./Utilities.wdl" as Utils
 #import "./BamProcessing.wdl" as BamProcessing
 
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/GermlineVariantDiscovery.wdl" as Calling
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Qc.wdl" as QC
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Utilities.wdl" as Utils
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/BamProcessing.wdl" as BamProcessing
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/BamProcessing.wdl" as BamProcessing
 
 workflow VariantCalling {
 

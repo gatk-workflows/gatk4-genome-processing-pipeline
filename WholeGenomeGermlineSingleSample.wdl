@@ -35,12 +35,12 @@ version 1.0
 #import "./tasks/VariantCalling.wdl" as ToGvcf
 #import "./structs/GermlineStructs.wdl"
 
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/AggregatedBamQC.wdl" as AggregatedQC
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/Qc.wdl" as QC
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/BamToCram.wdl" as ToCram
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/tasks/VariantCalling.wdl" as ToGvcf
-import "https://<StorageAccount>.blob.core.windows.net/data/gatk4-genome-processing-pipeline/structs/GermlineStructs.wdl"
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/AggregatedBamQC.wdl" as AggregatedQC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/BamToCram.wdl" as ToCram
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/VariantCalling.wdl" as ToGvcf
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow WholeGenomeGermlineSingleSample {
