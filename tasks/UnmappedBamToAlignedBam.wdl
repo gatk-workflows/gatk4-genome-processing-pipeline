@@ -16,12 +16,19 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "./Alignment.wdl" as Alignment
-import "./SplitLargeReadGroup.wdl" as SplitRG
-import "./Qc.wdl" as QC
-import "./BamProcessing.wdl" as Processing
-import "./Utilities.wdl" as Utils
-import "../structs/GermlineStructs.wdl" as Structs
+#import "./Alignment.wdl" as Alignment
+#import "./SplitLargeReadGroup.wdl" as SplitRG
+#import "./Qc.wdl" as QC
+#import "./BamProcessing.wdl" as Processing
+#import "./Utilities.wdl" as Utils
+#import "../structs/GermlineStructs.wdl" as Structs
+
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Alignment.wdl" as Alignment
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/SplitLargeReadGroup.wdl" as SplitRG
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/BamProcessing.wdl" as Processing
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/structs/GermlineStructs.wdl" as Structs
 
 # WORKFLOW DEFINITION
 workflow UnmappedBamToAlignedBam {
@@ -56,7 +63,7 @@ workflow UnmappedBamToAlignedBam {
   # Align flowcell-level unmapped input bams in parallel
   scatter (unmapped_bam in sample_and_unmapped_bams.flowcell_unmapped_bams) {
 
-    Float unmapped_bam_size = size(unmapped_bam, "GiB")
+    Float unmapped_bam_size = size(unmapped_bam, "GB")
 
     String unmapped_bam_basename = basename(unmapped_bam, sample_and_unmapped_bams.unmapped_bam_suffix)
 
@@ -99,7 +106,7 @@ workflow UnmappedBamToAlignedBam {
 
     File output_aligned_bam = select_first([SamToFastqAndBwaMemAndMba.output_bam, SplitRG.aligned_bam])
 
-    Float mapped_bam_size = size(output_aligned_bam, "GiB")
+    Float mapped_bam_size = size(output_aligned_bam, "GB")
 
     # QC the aligned but unsorted readgroup BAM
     # no reference as the input here is unsorted, providing a reference would cause an error
@@ -144,7 +151,7 @@ workflow UnmappedBamToAlignedBam {
       preemptible_tries = if data_too_large_for_preemptibles then 0 else papi_settings.agg_preemptible_tries
   }
 
-  Float agg_bam_size = size(SortSampleBam.output_bam, "GiB")
+  Float agg_bam_size = size(SortSampleBam.output_bam, "GB")
 
   if (defined(haplotype_database_file)) {
     # Check identity of fingerprints across readgroups
@@ -196,6 +203,7 @@ workflow UnmappedBamToAlignedBam {
     call Processing.BaseRecalibrator as BaseRecalibrator {
       input:
         input_bam = SortSampleBam.output_bam,
+        input_bam_index = SortSampleBam.output_bam_index,
         recalibration_report_filename = sample_and_unmapped_bams.base_file_name + ".recal_data.csv",
         sequence_group_interval = subgroup,
         dbsnp_vcf = references.dbsnp_vcf,
@@ -224,6 +232,7 @@ workflow UnmappedBamToAlignedBam {
     call Processing.ApplyBQSR as ApplyBQSR {
       input:
         input_bam = SortSampleBam.output_bam,
+        input_bam_index = SortSampleBam.output_bam_index,
         output_bam_basename = recalibrated_bam_basename,
         recalibration_report = GatherBqsrReports.output_bqsr_report,
         sequence_group_interval = subgroup,

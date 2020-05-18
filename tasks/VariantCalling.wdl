@@ -1,9 +1,14 @@
 version 1.0
 
-import "./GermlineVariantDiscovery.wdl" as Calling
-import "./Qc.wdl" as QC
-import "./Utilities.wdl" as Utils
-import "./BamProcessing.wdl" as BamProcessing
+#import "./GermlineVariantDiscovery.wdl" as Calling
+#import "./Qc.wdl" as QC
+#import "./Utilities.wdl" as Utils
+#import "./BamProcessing.wdl" as BamProcessing
+
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/GermlineVariantDiscovery.wdl" as Calling
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Utilities.wdl" as Utils
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/BamProcessing.wdl" as BamProcessing
 
 workflow VariantCalling {
 
@@ -14,6 +19,7 @@ workflow VariantCalling {
     Int break_bands_at_multiples_of
     Float? contamination
     File input_bam
+    File input_bam_index
     File ref_fasta
     File ref_fasta_index
     File ref_dict
@@ -53,6 +59,7 @@ workflow VariantCalling {
       call Calling.HaplotypeCaller_GATK35_GVCF as HaplotypeCallerGATK3 {
         input:
         input_bam = input_bam,
+        input_bam_index = input_bam_index,
         interval_list = scattered_interval_list,
         gvcf_basename = base_file_name,
         ref_dict = ref_dict,
@@ -71,6 +78,7 @@ workflow VariantCalling {
         input:
           contamination = contamination,
           input_bam = input_bam,
+          input_bam_index = input_bam_index,
           interval_list = scattered_interval_list,
           vcf_basename = base_file_name,
           ref_dict = ref_dict,
@@ -163,7 +171,7 @@ task MergeBamouts {
     String output_base_name
   }
 
-  Int disk_size = ceil(size(bams, "GiB") * 2) + 10
+  Int disk_size = ceil(size(bams, "GB") * 2) + 10
 
   command {
     samtools merge ~{output_base_name}.bam ~{sep=" " bams}
@@ -178,9 +186,10 @@ task MergeBamouts {
 
   runtime {
     docker: "biocontainers/samtools:1.3.1"
-    memory: "4 GiB"
-    disks: "local-disk ~{disk_size} HDD"
-    preemptible: 3
+    memory: "4 GB"
+    disk: "~{disk_size} GB"
+    preemptible: true
+    maxRetries: 3
     cpu: 1
   }
 }
