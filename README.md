@@ -1,4 +1,27 @@
-# gatk4-genome-processing-pipeline
+# Germline alignment and variant calling pipeline on Azure
+This repository is an example of running the germline alignment and variant calling pipeline, based on Best Practices Genome Analysis Pipeline by Broad Institute of MIT and Harvard, on Cromwell on Azure.<br/> 
+
+Learn more about using Azure for your Cromwell WDL workflows on our GitHub repo! - [Cromwell on Azure](https://github.com/microsoft/CromwellOnAzure).<br/>
+
+This repository is a fork from [the original](https://github.com/gatk-workflows/gatk4-genome-processing-pipeline) and has all the required changes to run the WDL workflow on Cromwell on Azure.<br/>
+
+Here, you can find the WDL file and an example inputs JSON file with links to data hosted on a public Azure Storage account. You can use the "msgenpublicdata" storage account directly as a relative path, like in the inputs JSON file. 
+
+The `WholeGenomeGermlineSingleSample.trigger.json` trigger file is ready to use. 
+
+### Host tutorial data on your Storage account
+If you prefer to host this data on your own Storage account, you can use [AzCopy](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-blobs#copy-a-container-to-another-storage-account) to transfer the entire blob container with the required files to your own Storage account [using a shared access signature](https://docs.microsoft.com/en-us/azure/storage/common/storage-sas-overview) with "Write" access.<br/>
+
+```
+.\azcopy.exe copy 'https://msgenpublicdata.blob.core.windows.net:443/inputs?sv=2015-04-05&sr=c&si=coa&sig=pENt%2FMMOj24uoNBZIPLa%2BNVVkvopcFK51rwADyYLEPE%3D' 'https://<destination-storage-account-name>.blob.core.windows.net/inputs?<WriteSAS-token>' --recursive --s2s-preserve-access-tier=false
+```
+
+Replace all instances of `/msgenpublicdata/inputs/` with your `/destination-storage-account-name/inputs/` in the inputs JSON file.
+
+The `WholeGenomeGermlineSingleSample.trigger.json` file is an example. Substitute the "WorkflowInputsUrl" with the http link to your inputs JSON file hosted on your Storage account.
+
+
+## gatk4-genome-processing-pipeline
 Workflows used for germline processing in whole genome sequence data.
 
 ### WholeGenomeGermlineSingleSample :
@@ -33,11 +56,7 @@ Indel discovery in human whole-genome sequencing data.
 
 ### Important Notes :
 - The provided JSON is a generic ready to use example template for the workflow. It is the user’s responsibility to correctly set the reference and resource variables for their own particular test case using the [GATK Tool and Tutorial Documentations](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591).
-- Runtime parameters are optimized for Broad's Google Cloud Platform implementation.
-- For help running workflows on the Google Cloud Platform or locally please
-view the following tutorial [(How to) Execute Workflows from the gatk-workflows Git Organization](https://gatk.broadinstitute.org/hc/en-us/articles/360035530952).
-- Please visit the [User Guide](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591) site for further documentation on our workflows and tools.
-- Relevant reference and resources bundles can be accessed in [Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360036212652).
+- Please visit the [User Guide](https://software.broadinstitute.org/gatk/documentation/) site for further documentation on our workflows and tools.
 
 ### Contact Us :
 - The following material is provided by the Data Science Platforum group at the Broad Institute. Please direct any questions or concerns to one of our forum sites : [GATK](https://gatk.broadinstitute.org/hc/en-us/community/topics) or [Terra](https://support.terra.bio/hc/en-us/community/topics/360000500432).
