@@ -35,12 +35,12 @@ version 1.0
 #import "./tasks/VariantCalling.wdl" as ToGvcf
 #import "./structs/GermlineStructs.wdl"
 
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/AggregatedBamQC.wdl" as AggregatedQC
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/Qc.wdl" as QC
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/BamToCram.wdl" as ToCram
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/tasks/VariantCalling.wdl" as ToGvcf
-import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/BroadUpdates/structs/GermlineStructs.wdl"
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/AggregatedBamQC.wdl" as AggregatedQC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/BamToCram.wdl" as ToCram
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/VariantCalling.wdl" as ToGvcf
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow WholeGenomeGermlineSingleSample {
@@ -55,7 +55,7 @@ workflow WholeGenomeGermlineSingleSample {
 
     File? haplotype_database_file
     Boolean provide_bam_output = false
-    Boolean use_gatk3_haplotype_caller = true
+#   Boolean use_gatk3_haplotype_caller = true
   }
 
   # Not overridable:
