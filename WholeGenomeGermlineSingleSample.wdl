@@ -28,12 +28,19 @@ version 1.0
 ## page at https://hub.docker.com/r/broadinstitute/genomes-in-the-cloud/ for detailed
 ## licensing information pertaining to the included programs.
 
-import "./tasks/UnmappedBamToAlignedBam.wdl" as ToBam
-import "./tasks/AggregatedBamQC.wdl" as AggregatedQC
-import "./tasks/Qc.wdl" as QC
-import "./tasks/BamToCram.wdl" as ToCram
-import "./tasks/VariantCalling.wdl" as ToGvcf
-import "./structs/GermlineStructs.wdl"
+#import "./tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+#import "./tasks/AggregatedBamQC.wdl" as AggregatedQC
+#import "./tasks/Qc.wdl" as QC
+#import "./tasks/BamToCram.wdl" as ToCram
+#import "./tasks/VariantCalling.wdl" as ToGvcf
+#import "./structs/GermlineStructs.wdl"
+
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/UnmappedBamToAlignedBam.wdl" as ToBam
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/AggregatedBamQC.wdl" as AggregatedQC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/Qc.wdl" as QC
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/BamToCram.wdl" as ToCram
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/tasks/VariantCalling.wdl" as ToGvcf
+import "https://raw.githubusercontent.com/microsoft/gatk4-genome-processing-pipeline-azure/az1.1.0/structs/GermlineStructs.wdl"
 
 # WORKFLOW DEFINITION
 workflow WholeGenomeGermlineSingleSample {
@@ -48,7 +55,7 @@ workflow WholeGenomeGermlineSingleSample {
 
     File? haplotype_database_file
     Boolean provide_bam_output = false
-    Boolean use_gatk3_haplotype_caller = true
+    Boolean use_gatk3_haplotype_caller = false
   }
 
   # Not overridable:
@@ -131,6 +138,7 @@ workflow WholeGenomeGermlineSingleSample {
       break_bands_at_multiples_of = references.break_bands_at_multiples_of,
       contamination = UnmappedBamToAlignedBam.contamination,
       input_bam = UnmappedBamToAlignedBam.output_bam,
+      input_bam_index = UnmappedBamToAlignedBam.output_bam_index,
       ref_fasta = references.reference_fasta.ref_fasta,
       ref_fasta_index = references.reference_fasta.ref_fasta_index,
       ref_dict = references.reference_fasta.ref_dict,

@@ -26,7 +26,7 @@ task SortSam {
   # SortSam spills to disk a lot more because we are only store 300000 records in RAM now because its faster for our data so it needs
   # more disk space.  Also it spills to disk in an uncompressed format so we need to account for that with a larger multiplier
   Float sort_sam_disk_multiplier = 3.25
-  Int disk_size = ceil(sort_sam_disk_multiplier * size(input_bam, "GiB")) + 20
+  Int disk_size = ceil(sort_sam_disk_multiplier * size(input_bam, "GB")) + 20
 
   command {
     java -Dsamjdk.compression_level=~{compression_level} -Xms4000m -jar /usr/gitc/picard.jar \
@@ -41,10 +41,11 @@ task SortSam {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    disks: "local-disk " + disk_size + " HDD"
+    disk: disk_size + " GB"
     cpu: "1"
-    memory: "5000 MiB"
-    preemptible: preemptible_tries
+    memory: "5000 MB"
+    preemptible: true
+    maxRetries: preemptible_tries
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -65,7 +66,7 @@ task SortSamSpark {
   # SortSam spills to disk a lot more because we are only store 300000 records in RAM now because its faster for our data so it needs
   # more disk space.  Also it spills to disk in an uncompressed format so we need to account for that with a larger multiplier
   Float sort_sam_disk_multiplier = 3.25
-  Int disk_size = ceil(sort_sam_disk_multiplier * size(input_bam, "GiB")) + 20
+  Int disk_size = ceil(sort_sam_disk_multiplier * size(input_bam, "GB")) + 20
 
   command {
     set -e
@@ -80,11 +81,11 @@ task SortSamSpark {
   }
   runtime {
     docker: gatk_docker
-    disks: "local-disk " + disk_size + " HDD"
-    bootDiskSizeGb: "15"
+    disk: disk_size + " GB"
     cpu: "16"
-    memory: "102 GiB"
-    preemptible: preemptible_tries
+    memory: "102 GB"
+    preemptible: true
+    maxRetries: preemptible_tries
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -107,7 +108,7 @@ task MarkDuplicates {
     # This can be desirable if you don't mind the estimated library size being wrong and optical duplicate detection is taking >7 days and failing
     String? read_name_regex
     Int memory_multiplier = 1
-    Int additional_disk = 20
+    Int additional_disk = 20							
   }
 
   # The merged bam will be smaller than the sum of the parts so we need to account for the unmerged inputs and the merged output.
@@ -137,9 +138,10 @@ task MarkDuplicates {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "~{memory_size} GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "~{memory_size} GB"
+    disk: disk_size + " GB"
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -192,11 +194,11 @@ task MarkDuplicatesSpark {
 
   runtime {
     docker: "jamesemery/gatknightly:gatkMasterSnapshot44ca2e9e84a"
-    disks: "/mnt/tmp " + ceil(2.1 * total_input_size) + " LOCAL, local-disk " + disk_size + " HDD"
-    bootDiskSizeGb: "50"
+    disk: "/mnt/tmp " + ceil(2.1 * total_input_size) + " LOCAL, local-disk " + disk_size + " GB"
     cpu: cpu_size
-    memory: "~{memory_size} GiB"
-    preemptible: preemptible_tries
+    memory: "~{memory_size} GB"
+    preemptible: true
+    maxRetries: preemptible_tries
   }
 
   output {
@@ -209,6 +211,7 @@ task MarkDuplicatesSpark {
 task BaseRecalibrator {
   input {
     File input_bam
+    File input_bam_index
     String recalibration_report_filename
     Array[String] sequence_group_interval
     File dbsnp_vcf
@@ -223,9 +226,9 @@ task BaseRecalibrator {
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.0.10.1"
   }
 
-  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB") + size(ref_dict, "GiB")
-  Float dbsnp_size = size(dbsnp_vcf, "GiB")
-  Int disk_size = ceil((size(input_bam, "GiB") / bqsr_scatter) + ref_size + dbsnp_size) + 20
+  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
+  Float dbsnp_size = size(dbsnp_vcf, "GB")
+  Int disk_size = ceil(size(input_bam, "GB") + size(input_bam_index, "GB") + ref_size + dbsnp_size) + 20
 
   parameter_meta {
     input_bam: {
@@ -248,9 +251,10 @@ task BaseRecalibrator {
   }
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "6 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "6 GB"
+    disk: disk_size + " GB"
   }
   output {
     File recalibration_report = "~{recalibration_report_filename}"
@@ -261,6 +265,7 @@ task BaseRecalibrator {
 task ApplyBQSR {
   input {
     File input_bam
+    File input_bam_index
     String output_bam_basename
     File recalibration_report
     Array[String] sequence_group_interval
@@ -272,11 +277,11 @@ task ApplyBQSR {
     Int preemptible_tries
     String gatk_docker = "us.gcr.io/broad-gatk/gatk:4.0.10.1"
     Int memory_multiplier = 1
-    Int additional_disk = 20
+    Int additional_disk = 20							
   }
 
-  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB") + size(ref_dict, "GiB")
-  Int disk_size = ceil((size(input_bam, "GiB") * 3 / bqsr_scatter) + ref_size) + additional_disk
+  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB") + size(ref_dict, "GB")
+  Int disk_size = ceil(size(input_bam, "GB") * 3 + size(input_bam_index, "GB") * 3 + ref_size) + additional_disk
 
   Int memory_size = ceil(3500 * memory_multiplier)
 
@@ -305,9 +310,10 @@ task ApplyBQSR {
   }
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "~{memory_size} MiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "~{memory_size} MB"
+    disk: disk_size + " GB"
   }
   output {
     File recalibrated_bam = "~{output_bam_basename}.bam"
@@ -332,9 +338,10 @@ task GatherBqsrReports {
     }
   runtime {
     docker: gatk_docker
-    preemptible: preemptible_tries
-    memory: "3500 MiB"
-    disks: "local-disk 20 HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3500 MB"
+    disk: "20 GB"
   }
   output {
     File output_bqsr_report = "~{output_report_filename}"
@@ -364,9 +371,10 @@ task GatherSortedBamFiles {
     }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "3 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3 GB"
+    disk: disk_size + " GB"
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -399,9 +407,10 @@ task GatherUnsortedBamFiles {
     }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "3 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3 GB"
+    disk: disk_size + " GB"
   }
   output {
     File output_bam = "~{output_bam_basename}.bam"
@@ -448,9 +457,10 @@ task GenerateSubsettedContaminationResources {
 
   >>>
   runtime {
-    preemptible: preemptible_tries
-    memory: "3.5 GiB"
-    disks: "local-disk 10 HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3.5 GB"
+    disk: "10 GB"
     docker: "us.gcr.io/broad-gotc-prod/bedtools:2.27.1"
   }
   output {
@@ -488,7 +498,7 @@ task CheckContamination {
     Boolean disable_sanity_check = false
   }
 
-  Int disk_size = ceil(size(input_bam, "GiB") + size(ref_fasta, "GiB")) + 30
+  Int disk_size = ceil(size(input_bam, "GB") + size(ref_fasta, "GB")) + 30
 
   command <<<
     set -e
@@ -531,9 +541,10 @@ task CheckContamination {
     CODE
   >>>
   runtime {
-    preemptible: preemptible_tries
-    memory: "7.5 GiB"
-    disks: "local-disk " + disk_size + " HDD"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "7.5 GB"
+    disk: disk_size + " GB"
     docker: "us.gcr.io/broad-gotc-prod/verify-bam-id:c1cba76e979904eb69c31520a0d7f5be63c72253-1553018888"
     cpu: 2
   }

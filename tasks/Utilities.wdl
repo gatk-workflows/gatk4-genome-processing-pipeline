@@ -61,9 +61,10 @@ task CreateSequenceGroupingTSV {
     CODE
   >>>
   runtime {
-    preemptible: preemptible_tries
+    preemptible: true
+    maxRetries: preemptible_tries
     docker: "us.gcr.io/broad-gotc-prod/python:2.7"
-    memory: "2 GiB"
+    memory: "2 GB"
   }
   output {
     Array[Array[String]] sequence_grouping = read_tsv("sequence_grouping.txt")
@@ -111,7 +112,7 @@ task ScatterIntervalList {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    memory: "2 GiB"
+    memory: "2 GB"
   }
 }
 
@@ -126,8 +127,8 @@ task ConvertToCram {
     Int preemptible_tries
   }
 
-  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB")
-  Int disk_size = ceil(2 * size(input_bam, "GiB") + ref_size) + 20
+  Float ref_size = size(ref_fasta, "GB") + size(ref_fasta_index, "GB")
+  Int disk_size = ceil(2 * size(input_bam, "GB") + ref_size) + 20
 
   command <<<
     set -e
@@ -146,10 +147,11 @@ task ConvertToCram {
   >>>
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: preemptible_tries
-    memory: "3 GiB"
+    preemptible: true
+    maxRetries: preemptible_tries
+    memory: "3 GB"
     cpu: "1"
-    disks: "local-disk " + disk_size + " HDD"
+    disk: disk_size + " GB"
   }
   output {
     File output_cram = "~{output_basename}.cram"
@@ -177,10 +179,11 @@ task ConvertToBam {
   >>>
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/genomes-in-the-cloud:2.4.3-1564508330"
-    preemptible: 3
-    memory: "3 GiB"
+    preemptible: true
+    maxRetries: 3
+    memory: "3 GB"
     cpu: "1"
-    disks: "local-disk 200 HDD"
+    disk: "200 GB"
   }
   output {
     File output_bam = "~{output_basename}.bam"
@@ -203,6 +206,7 @@ task SumFloats {
   }
   runtime {
     docker: "us.gcr.io/broad-gotc-prod/python:2.7"
-    preemptible: preemptible_tries
+    preemptible: true
+    maxRetries: preemptible_tries
   }
 }
