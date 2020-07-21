@@ -199,12 +199,50 @@ task CollectAggregationMetrics {
   }
 }
 
+task ConvertSequencingArtifactToOxoG {
+  input {
+      File pre_adapter_detail_metrics
+      File bait_bias_detail_metrics
+      String base_name
+      File ref_dict
+      File ref_fasta
+      File ref_fasta_index
+      Int preemptible_tries
+      Int memory_multiplier = 1
+  }
+
+  Float ref_size = size(ref_fasta, "GiB") + size(ref_fasta_index, "GiB") + size(ref_dict, "GiB")
+  Int disk_size = ceil(size(pre_adapter_detail_metrics, "GiB") + size(bait_bias_detail_metrics, "GiB") + ref_size) + 20
+
+  Int memory_size = ceil(4 * memory_multiplier)
+  Int java_memory_size = (memory_size - 1) * 1000
+
+  command {
+      input_base=$(dirname ~{pre_adapter_detail_metrics})/~{base_name}
+      java -Xms~{java_memory_size}m -Dpicard.useLegacyParser=false \
+        -jar /usr/picard/picard.jar \
+        ConvertSequencingArtifactToOxoG \
+        --INPUT_BASE $input_base \
+        --OUTPUT_BASE ~{base_name} \
+        --REFERENCE_SEQUENCE ~{ref_fasta}
+    }
+    runtime {
+      docker: "us.gcr.io/broad-gotc-prod/picard-cloud:2.22.3"
+      memory: "~{memory_size} GiB"
+      disks: "local-disk " + disk_size + " HDD"
+      preemptible: preemptible_tries
+    }
+    output {
+      File oxog_metrics = "~{base_name}.oxog_metrics"
+    }
+}
+
 # Check that the fingerprints of separate readgroups all match
 task CrossCheckFingerprints {
   input {
     Array[File] input_bams
     Array[File] input_bam_indexes
-    File? haplotype_database_file
+    File haplotype_database_file
     String metrics_filename
     Float total_input_size
     Int preemptible_tries
@@ -243,7 +281,7 @@ task CheckFingerprint {
     File input_bam
     File input_bam_index
     String output_basename
-    File? haplotype_database_file
+    File haplotype_database_file
     File? genotypes
     File? genotypes_index
     String sample
