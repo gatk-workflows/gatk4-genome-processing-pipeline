@@ -1,6 +1,8 @@
 # gatk4-genome-processing-pipeline
 Workflows used for germline processing in whole genome sequence data.
 
+*- This repo will soon be archived, its new repository location will be [broadinstitute/warp](https://github.com/broadinstitute/warp/tree/develop/pipelines/broad/dna_seq/germline/single_sample/wgs)*
+
 ### WholeGenomeGermlineSingleSample :
 This WDL pipeline implements data pre-processing and initial variant calling (GVCF
 generation) according to the GATK Best Practices (June 2016) for germline SNP and
@@ -24,6 +26,7 @@ Indel discovery in human whole-genome sequencing data.
 
 ### Software version requirements :
 - GATK 4.0.10.1
+  - The Haplotypecaller WDL call provides the option to use GATK 3, which uses GATK 4.beta.5 for PrintReads and GATK 3.5 for Haplotypecaller. 
 - Picard 2.20.0-SNAPSHOT
 - Samtools 1.3.1
 - Python 2.7
