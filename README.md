@@ -31,8 +31,7 @@ Indel discovery in human whole-genome sequencing data.
 - Samtools 1.3.1
 - Python 2.7
 - Cromwell version support 
-  - Successfully tested on v51
-  - Does not work on versions < v23 due to output syntax
+  - Successfully tested on v53
 
 ### Important Notes :
 - The provided JSON is a generic ready to use example template for the workflow. It is the user’s responsibility to correctly set the reference and resource variables for their own particular test case using the [GATK Tool and Tutorial Documentations](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591).
