@@ -1,6 +1,8 @@
 # gatk4-genome-processing-pipeline
 Workflows used for germline processing in whole genome sequence data.
 
+*- This repo will soon be archived, its new repository location will be [broadinstitute/warp](https://github.com/broadinstitute/warp/tree/develop/pipelines/broad/dna_seq/germline/single_sample/wgs)*
+
 ### WholeGenomeGermlineSingleSample :
 This WDL pipeline implements data pre-processing and initial variant calling (GVCF
 generation) according to the GATK Best Practices (June 2016) for germline SNP and
@@ -24,12 +26,12 @@ Indel discovery in human whole-genome sequencing data.
 
 ### Software version requirements :
 - GATK 4.0.10.1
+  - The Haplotypecaller call provides the option to use GATK 3, which uses GATK 4.beta.5 for PrintReads and GATK 3.5 for Haplotypecaller. 
 - Picard 2.20.0-SNAPSHOT
 - Samtools 1.3.1
 - Python 2.7
 - Cromwell version support 
-  - Successfully tested on v51
-  - Does not work on versions < v23 due to output syntax
+  - Successfully tested on v53
 
 ### Important Notes :
 - The provided JSON is a generic ready to use example template for the workflow. It is the user’s responsibility to correctly set the reference and resource variables for their own particular test case using the [GATK Tool and Tutorial Documentations](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591).
@@ -37,7 +39,7 @@ Indel discovery in human whole-genome sequencing data.
 - For help running workflows on the Google Cloud Platform or locally please
 view the following tutorial [(How to) Execute Workflows from the gatk-workflows Git Organization](https://gatk.broadinstitute.org/hc/en-us/articles/360035530952).
 - Please visit the [User Guide](https://gatk.broadinstitute.org/hc/en-us/categories/360002310591) site for further documentation on our workflows and tools.
-- Relevant reference and resources bundles can be accessed in [Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360036212652).
+- Relevant reference and resources bundles can be accessed in [Resource Bundle](https://gatk.broadinstitute.org/hc/en-us/articles/360035890811).
 
 ### Contact Us :
 - The following material is provided by the Data Science Platforum group at the Broad Institute. Please direct any questions or concerns to one of our forum sites : [GATK](https://gatk.broadinstitute.org/hc/en-us/community/topics) or [Terra](https://support.terra.bio/hc/en-us/community/topics/360000500432).
