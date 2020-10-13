@@ -25,8 +25,8 @@ Indel discovery in human whole-genome sequencing data.
 - Several Summary Metrics 
 
 ### Software version requirements :
-- GATK 4.0.10.1
-  - The Haplotypecaller call provides the option to use GATK 3, which uses GATK 4.beta.5 for PrintReads and GATK 3.5 for Haplotypecaller. 
+- GATK 4.0.10.1 and GATK 3.5
+ - By default, HaplotypeCaller will perform variant calling using GATK 3.5, which is what is used in Broad Production. To use GATK4, specify `use_gatk3_haplotype_caller=false` in the inputs.json. 
 - Picard 2.20.0-SNAPSHOT
 - Samtools 1.3.1
 - Python 2.7
