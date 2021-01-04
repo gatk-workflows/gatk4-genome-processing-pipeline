@@ -1,7 +1,8 @@
 # gatk4-genome-processing-pipeline
-Workflows used for germline processing in whole genome sequence data.
 
-*- This repo will soon be archived, its new repository location will be [broadinstitute/warp](https://github.com/broadinstitute/warp/tree/develop/pipelines/broad/dna_seq/germline/single_sample/wgs)*
+#### *- This repo has been archived, the workflows new repository location is [broadinstitute/warp](https://github.com/broadinstitute/warp/tree/develop/pipelines/broad/dna_seq/germline/single_sample/wgs)*
+
+Workflows used for germline processing in whole genome sequence data.
 
 ### WholeGenomeGermlineSingleSample :
 This WDL pipeline implements data pre-processing and initial variant calling (GVCF
